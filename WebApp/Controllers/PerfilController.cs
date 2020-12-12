@@ -220,10 +220,7 @@ namespace WebApp.Controllers
         [Route("Perfil/CambiarClave")]
         public async Task<IActionResult> CambiarClave(VM_CambarClave model)
         {
-            if (ModelState.IsValid)
-            {
-                ViewBag.re = "Dentro";
-            }
+           
             var users = await _context.usuarios1.FindAsync(model.codigo);
             if (model.codigo == 0 || model.codigo == null)
             {
@@ -233,15 +230,18 @@ namespace WebApp.Controllers
             
             if (users.contrasena != model.old_pass)
             {
-                return NotFound();
+                
+                TempData["Msg_Error_pass"] = "Su clave anterior no es Valida";
+                return RedirectToAction("Edit", "Perfil", new { @id = users.codigo });
             }
             else
             {
                 users.contrasena = model.new_pass;
                 _context.usuarios1.Update(users);
                 await _context.SaveChangesAsync();
-
-                ViewBag.Mensaje = "Contraseña Cambiada";
+                TempData["Msg_Success"] = "Contraseña Cambiada";
+                
+                return RedirectToAction("Edit", "Perfil", new { @id = users.codigo });
             }
             
             return RedirectToAction("Edit","Perfil", new { @id=users.codigo});
@@ -265,7 +265,7 @@ namespace WebApp.Controllers
             _context.usuarios1.Update(users);
             await _context.SaveChangesAsync();
 
-            ViewBag.Mensaje = "Foto Guardada";
+            TempData["Msg_Success_img"] = "Imagen Cambiada";
             return RedirectToAction("Edit", "Perfil", new { @id = users.codigo });
 
         }

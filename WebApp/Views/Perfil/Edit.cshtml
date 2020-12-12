@@ -8,7 +8,9 @@
 }
 
 <div class="pace-activity"></div>
-
+<span id="Msg_Success" class="d-none">@TempData["Msg_Success"]</span>
+<span id="Msg_Error_pass" class="d-none">@TempData["Msg_Error_pass"]</span>
+<span id="Msg_Success_img" class="d-none">@TempData["Msg_Success_img"]</span>
 <!-- BEGIN: Content-->
 <div class="app-content content">
     <div class="content-overlay"></div>
@@ -57,6 +59,7 @@
                                     <div class="tab-content">
                                         <div role="tabpanel" class="tab-pane active" id="v-pills-profil" aria-labelledby="account-pill-general" aria-expanded="true">
                                             <div class="" id="v-pills-profil">
+                                                
                                                 <form id="form_imagenes" enctype="multipart/form-data" asp-action="CargarImagen">
 
                                                     <div class="row">
@@ -64,7 +67,7 @@
                                                             <input type="hidden" asp-for="codigo" />
                                                             <img src="@rutaFoto" id="mostrar_imagen" width="201" height="177">
                                                             <br><br>
-                                                            <div id="div_img" style="padding: 1px; width: 150px; background-color: #17a2b8; position: relative; border-radius: 5px; box-shadow: 0px 3px 0px #1a71a9;">
+                                                            <div id="div_img" style="padding: 1px; width: 150px; background-color: #17a2b8; position: relative; border-radius: 5px; box-shadow: 0px 3px 0px #1a71a9; margin-left:30px">
                                                                 <p style="text-align: center;  color: white;">Subir Foto</p>
                                                                 <input type="file" id="files" name="Foto" as-for="Foto" multiple="multiple" accept="image/*" onchange="readURL(this);" style="position: absolute;top: 0px;left: 0px;right: 0px;bottom: 0px;opacity: 0;border-radius: 5px;">
                                                             </div>
@@ -224,25 +227,35 @@
         </div>
     </div>
 </div>
-@if (ViewBag.mensaje != null)
-{
-    <script type="text/javascript">
-        window.onload = function () {
-            alert("@ViewBag.mensaje");
-        }
-    </script>
-}
 
 
 
 
 
 
+<link href="~/css/CustomPerfil.css" rel="stylesheet" />
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/Jquery.min.js"></script>
+    <script src="~/js/toastr.js"></script>
     <script>
+        $(document).ready(function (){
+            var mensaje_save_pass = $('#Msg_Success').text();
+            var mensaje_error_pass = $('#Msg_Error_pass').text();
+            var mensaje_save_img = $('#Msg_Success_img').text();
+
+            if (mensaje_save_pass !== '') {
+                toastr.success(mensaje_save_pass);
+            }
+            if (mensaje_error_pass !== '') {
+                toastr.error(mensaje_error_pass);
+            }
+            if (mensaje_save_img !== '') {
+                toastr.success(mensaje_save_img);
+            }
+        });
+    
         function Validar() {
             var old_pass, new_pass, confirm_pass;
             new_pass = document.getElementById("new_pass").value;
@@ -262,7 +275,7 @@
                 alert("Validar");
                 $("#true_submit_imagenes").click();
             }
-           
+
 
         }
 
@@ -284,4 +297,3 @@
         }
     </script>
 }
-<link href="~/css/CustomPerfil.css" rel="stylesheet" />
